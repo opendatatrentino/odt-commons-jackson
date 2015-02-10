@@ -16,6 +16,8 @@ Java library for [Odt commons](https://github.com/opendatatrentino/odt-commons) 
 
 
 **Features**:
+  * Jackson module for odt-commons datatypes
+  * has some utility for working with Jackson
   * dependency handling with Maven
   * has a liberal Apache 2.0 license
   * supports Java 6+

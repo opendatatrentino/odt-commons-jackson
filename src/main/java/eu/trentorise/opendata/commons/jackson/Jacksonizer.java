@@ -54,11 +54,6 @@ public class Jacksonizer {
     private ObjectMapper getObjectMapper() {
         if (objectMapper == null) {
             objectMapper = new ObjectMapper();
-            objectMapper
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                            false) // let's be tolerant
-                    .configure(MapperFeature.USE_GETTERS_AS_SETTERS,
-                            false); // not good for unmodifiable collections            
             objectMapper.registerModule(new GuavaModule());
             objectMapper.registerModule(new OdtCommonsModule());
         }

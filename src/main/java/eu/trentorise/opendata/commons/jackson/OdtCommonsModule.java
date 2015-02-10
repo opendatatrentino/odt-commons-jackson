@@ -72,7 +72,7 @@ public final class OdtCommonsModule extends SimpleModule {
         addDeserializer(Dict.class, new StdDeserializer<Dict>(Dict.class) {
 
             @Override
-            public Dict deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+            public Dict deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {                
                 TypeReference ref = new TypeReference<ImmutableListMultimap<Locale, String>>() {
                 };
                 return Dict.of((ImmutableListMultimap) jp.readValueAs(ref));
