@@ -67,15 +67,27 @@ public class JacksonizerTest {
         Jacksonizer jm = Jacksonizer.of();
 
         ObjectMapper om = jm.makeJacksonMapper();
+
         JacksonTest.testJsonConv(om, LocalizedString.of("a", Locale.FRENCH), logger);
 
+         assertEquals(LocalizedString.of(), om.readValue("{}", LocalizedString.class));
+
         try {
-            LocalizedString locString = om.readValue("{\"string\":null, \"locale\":\"en\"}", LocalizedString.class);
-            Assert.fail("Should have validated the string!");
+            om.readValue("{\"string\":null, \"locale\":\"it\"}", LocalizedString.class);
+            Assert.fail("Should not accept null values!");
         }
         catch (Exception ex) {
 
         }
+
+        try {
+            om.readValue("{\"string\":\"a\"}", LocalizedString.class);
+            Assert.fail("Should have failed because no locale field was provided!");
+        }
+        catch (Exception ex) {
+
+        }
+
     }
-    
+
 }

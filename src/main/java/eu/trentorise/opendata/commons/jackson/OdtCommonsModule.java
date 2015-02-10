@@ -45,20 +45,6 @@ public final class OdtCommonsModule extends SimpleModule {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Returns the version of the module by reading it from build info at the
-     * root of provided class resources.
-     */
-    public static Version readJacksonVersion(Class clazz) {
-        SemVersion semver = SemVersion.of(OdtUtils.readBuildInfo(OdtCommonsModule.class).getVersion());
-        return new Version(semver.getMajor(),
-                semver.getMinor(),
-                semver.getPatch(),
-                semver.getPreReleaseVersion(),
-                "eu.trentorise.opendata.commons.jackson",
-                "odt-commons-jackson");
-    }
-
     private static abstract class JacksonLocalizedString {
 
         @JsonCreator
@@ -108,4 +94,18 @@ public final class OdtCommonsModule extends SimpleModule {
         return this == o; // it's like this in Guava module!
     }
 
+    
+    /**
+     * Returns the jackson version for an odt module by reading it from build info at the
+     * root of provided class resources.
+     */
+    public static Version readJacksonVersion(Class clazz) {
+        SemVersion semver = SemVersion.of(OdtUtils.readBuildInfo(clazz).getVersion());
+        return new Version(semver.getMajor(),
+                semver.getMinor(),
+                semver.getPatch(),
+                semver.getPreReleaseVersion(),
+                "eu.trentorise.opendata.commons.jackson",
+                "odt-commons-jackson");
+    }        
 }

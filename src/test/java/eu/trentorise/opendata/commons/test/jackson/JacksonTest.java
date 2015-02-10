@@ -28,6 +28,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
+ * Generic tests to understand Jackson inner mysteries
  * @author David Leoni
  */
 public class JacksonTest {

@@ -16,10 +16,13 @@
 package eu.trentorise.opendata.commons.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import eu.trentorise.opendata.commons.OdtUtils;
+import eu.trentorise.opendata.commons.SemVersion;
 import java.io.IOException;
 import javax.annotation.Nullable;
 
