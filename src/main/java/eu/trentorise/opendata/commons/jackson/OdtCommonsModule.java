@@ -61,7 +61,6 @@ public final class OdtCommonsModule extends SimpleModule {
     public OdtCommonsModule() {
         super("odt-commons-jackson", readJacksonVersion(OdtCommonsModule.class));
 
-        // todo register version in some way
         addSerializer(Dict.class, new StdSerializer<Dict>(Dict.class) {
             @Override
             public void serialize(Dict value, JsonGenerator jgen, SerializerProvider provider) throws IOException {

@@ -69,7 +69,7 @@ public class JacksonizerTest {
 
         ObjectMapper om = jm.makeJacksonMapper();
 
-        JacksonTest.testJsonConv(om, LocalizedString.of("a", Locale.FRENCH), logger);       
+        JacksonTest.testJsonConv(om, LocalizedString.of(Locale.FRENCH, "a"), logger);       
 
         try {
             om.readValue("{\"string\":null, \"locale\":\"it\"}", LocalizedString.class);
