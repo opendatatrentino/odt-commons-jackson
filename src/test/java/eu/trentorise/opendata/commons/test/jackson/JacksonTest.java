@@ -17,18 +17,27 @@ package eu.trentorise.opendata.commons.test.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.Converter;
+import com.fasterxml.jackson.databind.util.StdConverter;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Generic tests to understand Jackson inner mysteries
+ *
  * @author David Leoni
  */
 public class JacksonTest {
@@ -36,24 +45,28 @@ public class JacksonTest {
     private static final Logger logger = Logger.getLogger(JacksonTest.class.getName());
 
     /**
-     * Tests the provided object can be converted to json and reconstructed.
-     * Also prints the json with the provided logger at FINE level.
+     * Tests that the provided object can be converted to json and
+     * reconstructed. Also prints the json with the provided logger at FINE
+     * level.
+     *
+     * @return the reconstructed object
      */
-    public static void testJsonConv(ObjectMapper om, Object obj, Logger logger) {
+    public static <T> T testJsonConv(ObjectMapper om, T obj, Logger logger) {
 
-        Object recObj;
+        T recObj;
 
         try {
             String json = om.writeValueAsString(obj);
             logger.log(Level.FINE, "json = {0}", json);
-            recObj = om.readValue(json, obj.getClass());
+            Object ret = om.readValue(json, obj.getClass());
+            recObj = (T) ret;
         }
         catch (Throwable ex) {
             throw new RuntimeException(ex);
         }
 
         assertEquals(obj, recObj);
-
+        return recObj;
     }
 
     static class A {
@@ -96,8 +109,7 @@ public class JacksonTest {
      *
      * @throws IOException
      */
-    @Test
-    @Ignore
+    @Test(expected = AssertionError.class)
     public void testEmptyOptional() throws IOException {
         ObjectMapper om = new ObjectMapper();
         om.registerModule(new GuavaModule());
@@ -105,4 +117,25 @@ public class JacksonTest {
         A rb = om.readValue("{}", A.class);
         assertEquals(Optional.absent(), rb.getOpt());
     }
+
+    private static class NullLocale {
+
+        public Locale locale = Locale.ROOT;
+    }
+
+    /**
+     * Shows that nasty Jackson deserializes "" into null instead of
+     * {@link Locale.ROOT} !!!
+     *     
+     */
+    @Test(expected = AssertionError.class)
+    public void localeDeser() throws JsonProcessingException, IOException {
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(new NullLocale());
+        logger.log(Level.FINE, "json = " + json);
+        NullLocale res = om.readValue(json, NullLocale.class);
+        assertNotNull(res.locale);
+        assertEquals(Locale.ROOT, res.locale);
+    }
+
 }
