@@ -1,27 +1,28 @@
-Odt Commons Jackson 
-===
 <!--
 <p align="center">
 <img alt="Jackan" src="https://github.com/opendatatrentino/jackan/wiki/img/jackan-logo-200px.png" width="150px">
 </p>
 -->
 
-<br/>
+**About**
 
 Java library for [Odt commons](https://github.com/opendatatrentino/odt-commons) JSON serialization with Jackson.
 
-**Project status**: developing [milestone 0.5](https://github.com/opendatatrentino/semtext-jackson/issues?milestone=1&state=open) 
-
-**Usage**: see [the wiki](https://github.com/opendatatrentino/semtext-model/wiki)
-
-
-**Features**:
   * Jackson module for odt-commons datatypes
   * has some utility for working with Jackson
   * dependency handling with Maven
   * has a liberal Apache 2.0 license
   * supports Java 6+
 
+Usage: See [docs](docs)
+
+Roadmap: See [project milestones](../../milestones)
+
+License: business-friendly [Apache License v2.0](LICENSE.txt)
+
+Contributing: See [the wiki](../../wiki)
+
+<br/> 
 
 **Credits**:
 
