@@ -15,19 +15,16 @@
  */
 package eu.trentorise.opendata.commons.test.jackson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
 import eu.trentorise.opendata.commons.OdtConfig;
 import eu.trentorise.opendata.commons.jackson.Jacksonizer;
+import eu.trentorise.opendata.commons.jackson.OdtCommonsModule;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Logger;
-import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -36,65 +33,24 @@ import org.junit.Test;
  */
 public class JacksonizerTest {
 
-    private static final Logger logger = Logger.getLogger(JacksonizerTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(JacksonizerTest.class.getName());
 
     @BeforeClass
     public static void beforeClass() {
-        OdtConfig.of(JacksonizerTest.class).loadLogConfig();
+        OdtConfig.of(OdtCommonsModuleTest.class).loadLogConfig();
     }
 
     @Test
-    public void testDict() throws JsonProcessingException, IOException {
-        Jacksonizer jm = Jacksonizer.of();
-
-        ObjectMapper om = jm.makeJacksonMapper();
-        JacksonTest.testJsonConv(om, Dict.of("a", "b"), logger);
-        JacksonTest.testJsonConv(om, Dict.of(Locale.FRENCH, "a", "b"), logger);
-
-        Dict dict = om.readValue("{}", Dict.class);
-        assertEquals(Dict.of(), dict);
-
-        try {
-            Dict dict_2 = om.readValue("{\"it\":null}", Dict.class);
-            Assert.fail("Should have validated the dict!");
-        }
-        catch (Exception ex) {
-
-        }
-    }
-
-    @Test
-    public void testLocalizedString() throws JsonProcessingException, IOException {
-        Jacksonizer jm = Jacksonizer.of();
-
-        ObjectMapper om = jm.makeJacksonMapper();
-
-        JacksonTest.testJsonConv(om, LocalizedString.of(Locale.FRENCH, "a"), logger);       
-
-        try {
-            om.readValue("{\"string\":null, \"locale\":\"it\"}", LocalizedString.class);
-            Assert.fail("Should not accept null values!");
-        }
-        catch (Exception ex) {
-
-        }
-
-        try {
-            om.readValue("{\"string\":\"a\"}", LocalizedString.class);
-            Assert.fail("Should have failed because no locale field was provided!");
-        }
-        catch (Exception ex) {
-
-        }
-
-    }
-
-    /** Seems it doesn't work with empty constructors */
-    @Test
-    @Ignore
-    public void testEmptyConstructor() throws IOException{
-        ObjectMapper om = Jacksonizer.of().makeJacksonMapper();
-        assertEquals(LocalizedString.of(), om.readValue("{}", LocalizedString.class));
+    public void testToFromJsonDefaultMapper() throws IOException {
+        LocalizedString ls = LocalizedString.of(Locale.ITALIAN, "ciao");
+        assertEquals(ls, Jacksonizer.of().fromJson(Jacksonizer.of().toJson(ls), LocalizedString.class));
     }
     
+    @Test
+    public void testToFromJson()  {
+        ObjectMapper objectMapper = new ObjectMapper();
+        OdtCommonsModule.registerModulesInto(objectMapper);
+        LocalizedString ls = LocalizedString.of(Locale.ITALIAN, "ciao");
+        assertEquals(ls, Jacksonizer.of().fromJson(Jacksonizer.of(objectMapper).toJson(ls), LocalizedString.class));
+    }
 }

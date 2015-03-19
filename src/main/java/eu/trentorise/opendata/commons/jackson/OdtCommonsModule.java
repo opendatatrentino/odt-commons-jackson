@@ -19,14 +19,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.collect.ImmutableListMultimap;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
@@ -48,15 +49,15 @@ public final class OdtCommonsModule extends SimpleModule {
     private static abstract class JacksonLocalizedString {
 
         @JsonCreator
-        public static LocalizedString of(@JsonProperty("string") String string, @JsonProperty("locale") Locale locale) {
+        public static LocalizedString of(@JsonProperty("locale") Locale locale, @JsonProperty("string") String string) {
             return null; // just because the method can't be abstract.
         }
 
     }
-
+    
     /**
-     * Creates the module and registers all the needed serializaers and
-     * deserializers
+     * Creates the module and registers all the needed serializers and
+     * deserializers for Odt Commons objects
      */
     public OdtCommonsModule() {
         super("odt-commons-jackson", readJacksonVersion(OdtCommonsModule.class));
@@ -71,7 +72,7 @@ public final class OdtCommonsModule extends SimpleModule {
         addDeserializer(Dict.class, new StdDeserializer<Dict>(Dict.class) {
 
             @Override
-            public Dict deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {                
+            public Dict deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException{                
                 TypeReference ref = new TypeReference<ImmutableListMultimap<Locale, String>>() {
                 };
                 return Dict.of((ImmutableListMultimap) jp.readValueAs(ref));
@@ -107,4 +108,13 @@ public final class OdtCommonsModule extends SimpleModule {
                 "eu.trentorise.opendata.commons.jackson",
                 "odt-commons-jackson");
     }        
+    
+    /**
+     * Registers in the provided object mapper the jackson odt commons module and
+     * also the required guava module.
+     */
+    public static void registerModulesInto(ObjectMapper om) {
+        om.registerModule(new GuavaModule());
+        om.registerModule(new OdtCommonsModule());     
+    }    
 }

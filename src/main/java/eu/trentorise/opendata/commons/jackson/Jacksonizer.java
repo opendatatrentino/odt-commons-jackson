@@ -16,21 +16,22 @@
 package eu.trentorise.opendata.commons.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import eu.trentorise.opendata.commons.OdtUtils;
-import eu.trentorise.opendata.commons.SemVersion;
+import com.google.common.annotations.Beta;
+import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.IOException;
-import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 
 /**
- * Utility class to ease working with Jackson.
+ * Utility class to provide a simple interface to Jackson methods
  *
  * @author David Leoni
  */
+@ParametersAreNonnullByDefault
+@Immutable
+@Beta
 public class Jacksonizer {
 
     /**
@@ -38,26 +39,25 @@ public class Jacksonizer {
      */
     private static final Jacksonizer INSTANCE = new Jacksonizer();
 
-    @Nullable
-    private static ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
+
+    private Jacksonizer() {
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new GuavaModule());
+        objectMapper.registerModule(new OdtCommonsModule());
+    }
+
+    private Jacksonizer(ObjectMapper objectMapper) {
+        this();
+        checkNotNull(objectMapper);
+        this.objectMapper = objectMapper;
+    }
 
     /**
      * Returns a clone of the json object mapper used internally.
      */
-    public ObjectMapper makeJacksonMapper() {
-        return getObjectMapper().copy();
-    }
-
-    /**
-     * Returns the internal object mapper, lazily creating it if necessary
-     */
-    private ObjectMapper getObjectMapper() {
-        if (objectMapper == null) {
-            objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new GuavaModule());
-            objectMapper.registerModule(new OdtCommonsModule());
-        }
-        return objectMapper;
+    public ObjectMapper createJacksonMapper() {
+        return objectMapper.copy();
     }
 
     /**
@@ -68,7 +68,7 @@ public class Jacksonizer {
      */
     public String toJson(Object obj) {
         try {
-            return getObjectMapper().writeValueAsString(obj);
+            return objectMapper.writeValueAsString(obj);
         }
         catch (JsonProcessingException ex) {
             throw new IllegalArgumentException("Couldn't serialize provided object!", ex);
@@ -84,7 +84,7 @@ public class Jacksonizer {
      */
     public <T> T fromJson(String jsonString, Class<T> clazz) {
         try {
-            return getObjectMapper().readValue(jsonString, clazz);
+            return objectMapper.readValue(jsonString, clazz);
         }
         catch (JsonProcessingException ex) {
             throw new IllegalArgumentException("Couldn't deserialize provided SemText json: " + jsonString, ex);
@@ -95,10 +95,18 @@ public class Jacksonizer {
     }
 
     /**
-     * Factory method, returning the Jacksonizer with the default internal
-     * Jackson object mapper.
+     * Factory method, returning the Jacksonizer already configured for Odt
+     * commons objects.
      */
     public static Jacksonizer of() {
         return INSTANCE;
+    }
+
+    /**
+     * Factory method which returns the Jacksonizer wrapping the provided
+     * object mapper.
+     */
+    public static Jacksonizer of(ObjectMapper objectMapper) {
+        return new Jacksonizer(objectMapper);
     }
 }

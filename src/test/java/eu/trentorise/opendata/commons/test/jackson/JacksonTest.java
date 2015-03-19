@@ -17,22 +17,15 @@ package eu.trentorise.opendata.commons.test.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.Converter;
-import com.fasterxml.jackson.databind.util.StdConverter;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -132,7 +125,7 @@ public class JacksonTest {
     public void localeDeser() throws JsonProcessingException, IOException {
         ObjectMapper om = new ObjectMapper();
         String json = om.writeValueAsString(new NullLocale());
-        logger.log(Level.FINE, "json = " + json);
+        logger.log(Level.FINE, "json = {0}", json);
         NullLocale res = om.readValue(json, NullLocale.class);
         assertNotNull(res.locale);
         assertEquals(Locale.ROOT, res.locale);
