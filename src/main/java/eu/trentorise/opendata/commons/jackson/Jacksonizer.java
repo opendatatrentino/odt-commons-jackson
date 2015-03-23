@@ -32,7 +32,7 @@ import javax.annotation.concurrent.Immutable;
 @ParametersAreNonnullByDefault
 @Immutable
 @Beta
-public class Jacksonizer {
+public final class Jacksonizer {
 
     /**
      * The singleton instance of the Jacksonizer
