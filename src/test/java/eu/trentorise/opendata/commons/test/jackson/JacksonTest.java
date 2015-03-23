@@ -54,7 +54,7 @@ public class JacksonTest {
             Object ret = om.readValue(json, obj.getClass());
             recObj = (T) ret;
         }
-        catch (Throwable ex) {
+        catch (Exception ex) {
             throw new RuntimeException(ex);
         }
 
