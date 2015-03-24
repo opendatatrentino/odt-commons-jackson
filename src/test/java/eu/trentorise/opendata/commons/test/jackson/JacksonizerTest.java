@@ -23,7 +23,9 @@ import eu.trentorise.opendata.commons.jackson.OdtCommonsModule;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Logger;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -45,12 +47,46 @@ public class JacksonizerTest {
         LocalizedString ls = LocalizedString.of(Locale.ITALIAN, "ciao");
         assertEquals(ls, Jacksonizer.of().fromJson(Jacksonizer.of().toJson(ls), LocalizedString.class));
     }
-    
+
+    /**
+     * Class with no constructor, Jackson won't be able to deserialize it
+     */
+    private static class MyNastyClass {
+
+        public int getProp() {
+            throw new RuntimeException();
+        }
+    }
+
     @Test
-    public void testToFromJson()  {
+    public void testToFromJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         OdtCommonsModule.registerModulesInto(objectMapper);
         LocalizedString ls = LocalizedString.of(Locale.ITALIAN, "ciao");
         assertEquals(ls, Jacksonizer.of().fromJson(Jacksonizer.of(objectMapper).toJson(ls), LocalizedString.class));
+
+        try {
+            Jacksonizer.of().toJson(new MyNastyClass());
+            Assert.fail();
+        }
+        catch (IllegalArgumentException ex) {
+
+        }
+
+        try {
+            Jacksonizer.of().fromJson("garbage", MyNastyClass.class);
+            Assert.fail();
+        }
+        catch (IllegalArgumentException ex) {
+
+        }
+
+    }
+
+    @Test
+    public void testObjectMapperCopy() {
+        ObjectMapper om1 = Jacksonizer.of().createJacksonMapper();
+        ObjectMapper om2 = Jacksonizer.of().createJacksonMapper();
+        assertTrue(om1 != om2);
     }
 }
