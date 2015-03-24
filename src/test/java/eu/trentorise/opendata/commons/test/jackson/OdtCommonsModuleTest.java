@@ -21,7 +21,6 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
 import eu.trentorise.opendata.commons.OdtConfig;
-import eu.trentorise.opendata.commons.jackson.Jacksonizer;
 import eu.trentorise.opendata.commons.jackson.OdtCommonsModule;
 import java.io.IOException;
 import java.util.Locale;
@@ -29,6 +28,7 @@ import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -132,4 +132,15 @@ public class OdtCommonsModuleTest {
         LocalizedString reconstructedLocalizedString = om.readValue(json, LocalizedString.class);
     }
 
+    /**
+     * Tests weird module equality copied from Guava module
+     */
+    @Test
+    public void testEquality(){        
+        OdtCommonsModule sm = new OdtCommonsModule();
+        assertEquals(sm, sm);
+        assertEquals(new OdtCommonsModule().hashCode(), new OdtCommonsModule().hashCode());
+        assertNotEquals(new OdtCommonsModule(), new OdtCommonsModule());
+    }
+    
 }
