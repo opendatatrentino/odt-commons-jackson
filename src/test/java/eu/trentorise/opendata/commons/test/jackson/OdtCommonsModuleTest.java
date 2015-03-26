@@ -46,7 +46,7 @@ public class OdtCommonsModuleTest {
 
     @BeforeClass
     public static void beforeClass() {
-        OdtConfig.of(OdtCommonsModuleTest.class).loadLogConfig();
+        OdtConfig.init(OdtCommonsModuleTest.class);
     }
 
     @Before
