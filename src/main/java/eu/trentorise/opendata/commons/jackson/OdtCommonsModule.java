@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableListMultimap;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
 import eu.trentorise.opendata.commons.OdtConfig;
-import eu.trentorise.opendata.commons.OdtUtils;
 import eu.trentorise.opendata.commons.SemVersion;
 import java.io.IOException;
 import java.util.Locale;
