@@ -31,6 +31,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.collect.ImmutableListMultimap;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
+import eu.trentorise.opendata.commons.OdtConfig;
 import eu.trentorise.opendata.commons.OdtUtils;
 import eu.trentorise.opendata.commons.SemVersion;
 import java.io.IOException;
@@ -100,7 +101,7 @@ public final class OdtCommonsModule extends SimpleModule {
      * root of provided class resources.
      */
     public static Version readJacksonVersion(Class clazz) {
-        SemVersion semver = SemVersion.of(OdtUtils.readBuildInfo(clazz).getVersion());
+        SemVersion semver = SemVersion.of(OdtConfig.of(clazz).getBuildInfo().getVersion());
         return new Version(semver.getMajor(),
                 semver.getMinor(),
                 semver.getPatch(),

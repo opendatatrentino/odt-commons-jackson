@@ -39,7 +39,7 @@ public class JacksonizerTest {
 
     @BeforeClass
     public static void beforeClass() {
-        OdtConfig.of(OdtCommonsModuleTest.class).loadLogConfig();
+        OdtConfig.init(JacksonizerTest.class);
     }
 
     @Test

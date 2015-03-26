@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.base.Optional;
+import eu.trentorise.opendata.commons.OdtConfig;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -26,6 +27,7 @@ import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -37,6 +39,11 @@ public class JacksonTest {
 
     private static final Logger logger = Logger.getLogger(JacksonTest.class.getName());
 
+    @BeforeClass
+    public static void beforeClass() {
+        OdtConfig.init(JacksonTest.class);
+    }    
+    
     /**
      * Tests that the provided object can be converted to json and
      * reconstructed. Also prints the json with the provided logger at FINE
