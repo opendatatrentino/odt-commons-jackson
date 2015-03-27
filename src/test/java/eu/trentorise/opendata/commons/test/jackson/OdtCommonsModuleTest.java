@@ -17,11 +17,14 @@ package eu.trentorise.opendata.commons.test.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
 import eu.trentorise.opendata.commons.OdtConfig;
 import eu.trentorise.opendata.commons.jackson.OdtCommonsModule;
+import static eu.trentorise.opendata.commons.test.jackson.OdtJacksonTester.changeField;
+import static eu.trentorise.opendata.commons.test.jackson.OdtJacksonTester.testJsonConv;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -63,8 +66,8 @@ public class OdtCommonsModuleTest {
     @Test
     public void testDict() throws JsonProcessingException, IOException {
 
-        JacksonTest.testJsonConv(objectMapper, Dict.of("a", "b"), LOG);
-        JacksonTest.testJsonConv(objectMapper, Dict.of(Locale.FRENCH, "a", "b"), LOG);
+        testJsonConv(objectMapper, LOG, Dict.of("a", "b"));
+        testJsonConv(objectMapper, LOG, Dict.of(Locale.FRENCH, "a", "b"));
 
         Dict dict = objectMapper.readValue("{}", Dict.class);
         assertEquals(Dict.of(), dict);
@@ -81,10 +84,12 @@ public class OdtCommonsModuleTest {
     @Test
     public void testLocalizedString() throws JsonProcessingException, IOException {
 
-        JacksonTest.testJsonConv(objectMapper, LocalizedString.of(Locale.FRENCH, "a"), LOG);
+        testJsonConv(objectMapper, LOG, LocalizedString.of(Locale.FRENCH, "a"));
 
+        String json = changeField(objectMapper, LOG, LocalizedString.of(Locale.ITALIAN, "a") , "string", NullNode.instance);
+        
         try {
-            objectMapper.readValue("{\"string\":null, \"locale\":\"it\"}", LocalizedString.class);
+            objectMapper.readValue(json, LocalizedString.class);
             Assert.fail("Should not accept null values!");
         }
         catch (Exception ex) {

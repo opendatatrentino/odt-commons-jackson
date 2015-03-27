@@ -16,14 +16,22 @@
 package eu.trentorise.opendata.commons.test.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.TreeNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.base.Optional;
+import static com.google.common.base.Preconditions.checkNotNull;
 import eu.trentorise.opendata.commons.OdtConfig;
+import eu.trentorise.opendata.commons.OdtException;
+import static eu.trentorise.opendata.commons.OdtUtils.checkNotEmpty;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -42,31 +50,6 @@ public class JacksonTest {
     @BeforeClass
     public static void beforeClass() {
         OdtConfig.init(JacksonTest.class);
-    }    
-    
-    /**
-     * Tests that the provided object can be converted to json and
-     * reconstructed. Also prints the json with the provided logger at FINE
-     * level.
-     *
-     * @return the reconstructed object
-     */
-    public static <T> T testJsonConv(ObjectMapper om, T obj, Logger logger) {
-
-        T recObj;
-
-        try {
-            String json = om.writeValueAsString(obj);
-            logger.log(Level.FINE, "json = {0}", json);
-            Object ret = om.readValue(json, obj.getClass());
-            recObj = (T) ret;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-
-        assertEquals(obj, recObj);
-        return recObj;
     }
 
     static class A {
@@ -126,7 +109,7 @@ public class JacksonTest {
     /**
      * Shows that nasty Jackson deserializes "" into null instead of
      * {@link Locale.ROOT} !!!
-     *     
+     *
      */
     @Test(expected = AssertionError.class)
     public void localeDeser() throws JsonProcessingException, IOException {
