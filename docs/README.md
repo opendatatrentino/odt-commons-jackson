@@ -3,11 +3,9 @@ WARNING: THIS IS ONLY A TEMPLATE FOR THE DOCUMENTATION. <br/>
 RELEASE DOCS ARE ON THE <a href="http://opendatatrentino.github.io/odt-commons-jackson/" target="_blank">PROJECT WEBSITE</a>
 </p>
 
-This release allows serializing and deserializing Dict and LocalizedString in Jackson 2.x by installing the OdtCommonsModule in a Jackson ObjectMapper. Also, some basic utility to work with Jackson is provided in the Jacksonizer class.
-
 ### Maven
 
-Odt Commons Jackson is available on Maven Central. To use it, put this in the dependencies section of your _pom.xml_:
+Odt Commons Jackson is available on Maven Central. To use it, put this in the dependencies section of your `pom.xml`:
 
 ```
     <dependency>
@@ -21,6 +19,9 @@ In case updates are available, version numbers follows <a href="http://semver.or
 
 
 ### Using Jackson Module
+
+Odt Commons Jackson allows serializing and deserializing `Dict` and `LocalizedString` in Jackson 2.x by installing the `OdtCommonsModule` in a Jackson `ObjectMapper`. Also, some basic utility to work with Jackson is provided in the `Jacksonizer` class.
+
 
 You can register `OdtCommonsModule` in your own Jackson ObjectMapper:
 
