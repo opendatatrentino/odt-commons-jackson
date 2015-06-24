@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * A module for handling Odt commons objects Dict and LocalizedString with
+ * A module for handling Odt commons objects with
  * Jackson JSON serialization framework.
  *
  * @author David Leoni <david.leoni@unitn.it>
