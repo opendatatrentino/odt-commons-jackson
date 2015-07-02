@@ -33,6 +33,9 @@ import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
 import eu.trentorise.opendata.commons.OdtConfig;
 import eu.trentorise.opendata.commons.SemVersion;
+import eu.trentorise.opendata.commons.validation.IValidationError;
+import eu.trentorise.opendata.commons.validation.Ref;
+import eu.trentorise.opendata.commons.validation.ValidationError;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -54,6 +57,31 @@ public final class OdtCommonsModule extends SimpleModule {
         }
 
     }
+
+    
+    private static abstract class JacksonValidationError {
+
+        @JsonCreator
+        public static ValidationError of(@JsonProperty("ref") Ref ref, 
+                @JsonProperty("errorCode") Object errorCode,
+                @JsonProperty("reason") Object... reason) {
+            return null;  // just because the method can't be abstract.
+        }        
+    }
+    
+    
+    private static abstract class JacksonRef {
+        
+        @JsonCreator
+        public static Ref of(@JsonProperty("documentId") String documentId, 
+                            @JsonProperty("physicalRow") int physicalRow, 
+                            @JsonProperty("physicalColumn") int physicalColumn, 
+                            @JsonProperty("jsonPath") String jsonPath) {
+            return null;  // just because the method can't be abstract.
+        }
+        
+    }    
+    
     
     /**
      * Creates the module and registers all the needed serializers and
@@ -80,6 +108,9 @@ public final class OdtCommonsModule extends SimpleModule {
         });
 
         setMixInAnnotation(LocalizedString.class, JacksonLocalizedString.class);
+        
+        setMixInAnnotation(IValidationError.class, JacksonValidationError.class);
+        setMixInAnnotation(Ref.class, JacksonRef.class);
 
     }
 

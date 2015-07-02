@@ -22,9 +22,11 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
 import eu.trentorise.opendata.commons.OdtConfig;
+import eu.trentorise.opendata.commons.validation.ValidationError;
 import eu.trentorise.opendata.commons.jackson.OdtCommonsModule;
 import static eu.trentorise.opendata.commons.test.jackson.OdtJacksonTester.changeField;
 import static eu.trentorise.opendata.commons.test.jackson.OdtJacksonTester.testJsonConv;
+import eu.trentorise.opendata.commons.validation.Ref;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -106,6 +108,21 @@ public class OdtCommonsModuleTest {
 
     }
 
+    
+    @Test
+    public void testValidationError() throws JsonProcessingException, IOException {
+
+        testJsonConv(objectMapper, LOG, Ref.of("", 1, -1, "a"));
+        
+        testJsonConv(objectMapper, LOG, ValidationError.of("$a.b", 2, "a", "b"));
+
+        //String json = changeField(objectMapper, LOG, ValidationError.of("$a.b", 2, "c") , "ref", NullNode.instance);
+        
+        //assertEquals("*", objectMapper.readValue(json, ValidationError.class).getRef().getJsonPath());
+
+
+    }    
+    
     /**
      * Seems it doesn't work with empty constructors
      */
