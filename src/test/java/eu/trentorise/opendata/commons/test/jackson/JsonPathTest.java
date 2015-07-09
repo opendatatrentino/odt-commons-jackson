@@ -17,7 +17,15 @@ package eu.trentorise.opendata.commons.test.jackson;
 
 import com.google.common.collect.ImmutableList;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.internal.Path;
+import com.jayway.jsonpath.internal.PathCompiler;
+import com.jayway.jsonpath.internal.token.PathToken;
+import eu.trentorise.opendata.commons.OdtConfig;
+import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.Assert.assertEquals;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -25,10 +33,34 @@ import org.junit.Test;
  * @author David Leoni
  */
 public class JsonPathTest {
+    private static final Logger LOG = Logger.getLogger(JsonPathTest.class.getName());
+        
+        @BeforeClass
+    public static void beforeClass() {
+        OdtConfig.init(JsonPathTest.class);
+    }
     
     @Test
-    public void testGrammar(){        
+    public void testGrammar(){
         assertEquals("c", JsonPath.read("{a:{b:\"c\"}}", "$.a.b"));
         assertEquals(ImmutableList.of("c"), JsonPath.read("{a:{b:\"c\"}}", "*.b"));
+        
+        Path path = PathCompiler.compile("$.a.b");
+        
+        Field f; 
+        try {
+            f = path.getClass().getDeclaredField("root"); //NoSuchFieldException
+            f.setAccessible(true);
+            PathToken root = (PathToken) f.get(path); //IllegalAccessException
+            //root.
+            LOG.fine(root.toString());
+        }
+        catch (NoSuchFieldException |SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+            Logger.getLogger(JsonPathTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                
+        
+        
+        LOG.fine(path.toString());
     }
 }

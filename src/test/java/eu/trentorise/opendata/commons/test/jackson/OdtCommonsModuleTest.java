@@ -26,6 +26,7 @@ import eu.trentorise.opendata.commons.validation.ValidationError;
 import eu.trentorise.opendata.commons.jackson.OdtCommonsModule;
 import static eu.trentorise.opendata.commons.test.jackson.OdtJacksonTester.changeField;
 import static eu.trentorise.opendata.commons.test.jackson.OdtJacksonTester.testJsonConv;
+import eu.trentorise.opendata.commons.validation.ErrorLevel;
 import eu.trentorise.opendata.commons.validation.Ref;
 import java.io.IOException;
 import java.util.Locale;
@@ -114,7 +115,7 @@ public class OdtCommonsModuleTest {
 
         testJsonConv(objectMapper, LOG, Ref.of("", 1, -1, "a"));
         
-        testJsonConv(objectMapper, LOG, ValidationError.of("$a.b", 2, "a", "b"));
+        testJsonConv(objectMapper, LOG, ValidationError.of("$a.b",ErrorLevel.INFO, 2, "a%s", "b"));
 
         //String json = changeField(objectMapper, LOG, ValidationError.of("$a.b", 2, "c") , "ref", NullNode.instance);
         
