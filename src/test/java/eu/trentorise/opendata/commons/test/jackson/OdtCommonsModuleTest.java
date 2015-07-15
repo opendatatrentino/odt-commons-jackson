@@ -115,7 +115,7 @@ public class OdtCommonsModuleTest {
 
         testJsonConv(objectMapper, LOG, Ref.of("", 1, -1, "a"));
         
-        testJsonConv(objectMapper, LOG, ValidationError.of("$a.b",ErrorLevel.INFO, 2, "a%s", "b"));
+        testJsonConv(objectMapper, LOG, ValidationError.of(Ref.of("$a.b"),ErrorLevel.INFO, 2, "a%x", "x","b"));
 
         //String json = changeField(objectMapper, LOG, ValidationError.of("$a.b", 2, "c") , "ref", NullNode.instance);
         

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import static com.google.common.base.Preconditions.checkNotNull;
 import eu.trentorise.opendata.commons.OdtException;
-import static eu.trentorise.opendata.commons.OdtUtils.checkNotEmpty;
+import static eu.trentorise.opendata.commons.validation.Preconditions.checkNotEmpty;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
