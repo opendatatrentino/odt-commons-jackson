@@ -125,7 +125,7 @@
         <dependency>
             <groupId>eu.trentorise.opendata.commons</groupId>
             <artifactId>odt-commons</artifactId>            
-        </dependency>                                                                                                                       
+        </dependency>
         <!-- the Jackson core, which includes Streaming API, shared low-level abstractions (but NOT data-binding) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

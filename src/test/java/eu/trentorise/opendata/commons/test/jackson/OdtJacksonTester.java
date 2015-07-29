@@ -87,14 +87,20 @@ public class OdtJacksonTester {
 
         T recObj;
 
+        String json;
+        
         try {
-            String json = om.writeValueAsString(obj);
+            json = om.writeValueAsString(obj);
             logger.log(Level.FINE, "json = {0}", json);
+        } catch (Exception ex){
+                    throw new RuntimeException("FAILED SERIALIZING!", ex);
+        }
+        try {
             Object ret = om.readValue(json, obj.getClass());
             recObj = (T) ret;
         }
         catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException("FAILED DESERIALIZING!", ex);
         }
 
         assertEquals(obj, recObj);
