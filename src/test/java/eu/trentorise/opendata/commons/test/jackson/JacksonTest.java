@@ -15,15 +15,22 @@
  */
 package eu.trentorise.opendata.commons.test.jackson;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.base.Optional;
 import eu.trentorise.opendata.commons.OdtConfig;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +44,7 @@ import org.junit.Test;
  */
 public class JacksonTest {
 
-    private static final Logger logger = Logger.getLogger(JacksonTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(JacksonTest.class.getName());
 
     @BeforeClass
     public static void beforeClass() {
@@ -107,10 +114,101 @@ public class JacksonTest {
     public void localeDeser() throws JsonProcessingException, IOException {
         ObjectMapper om = new ObjectMapper();
         String json = om.writeValueAsString(new NullLocale());
-        logger.log(Level.FINE, "json = {0}", json);
+        LOG.log(Level.FINE, "json = {0}", json);
         NullLocale res = om.readValue(json, NullLocale.class);
         assertNotNull(res.locale);
         assertEquals(Locale.ROOT, res.locale);
+    }
+
+    private static class WithText<T> {
+
+        private String description;
+        private T value;
+
+        public WithText() {
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+
+    }
+
+    @Test
+    public void testGenerics() throws JsonProcessingException, IOException {
+        WithText<Date> d = new WithText();
+        d.setValue(new Date());
+        d.setDescription("bla");
+
+        String json = new ObjectMapper().writeValueAsString(d);
+        LOG.fine(json);
+        WithText<Date> readValue = new ObjectMapper().readValue(json, new TypeReference<WithText<Date>>() {
+        });
+
+    }
+
+    /**
+     * Shows default convertValue is not very smart, it causes causes null null     {@code java.lang.IllegalArgumentException: Can not deserialize instance of
+     * java.util.ArrayList out of VALUE_STRING token}
+     */
+    @Test
+    public void testJacksonConverter() throws IOException {
+        try {
+            Object convertValue = new ObjectMapper().convertValue("[\"it\"]", new TypeReference<List<Locale>>() {
+            });
+            Assert.fail();
+        }
+        catch (Exception ex) {
+
+        }
+    }
+
+    /**
+     * Shows we absolutely need the damned dot '.' before the type field when
+     * using JsonTypeInfo.Id.MINIMAL_CLASS
+     *
+     * @throws JsonProcessingException
+     * @throws IOException
+     */
+    @Test
+    public void testMinimalAbs() throws JsonProcessingException, IOException {
+        String json = new ObjectMapper().writeValueAsString(new Impl());
+        LOG.log(Level.INFO, "json  = {0}", json);
+
+        Abs retJson = new ObjectMapper().readValue(json, Abs.class);
+
+    }
+
+}
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+abstract class Abs {
+
+    @JsonProperty()
+    public String getType() {
+        return "." + this.getClass().getSimpleName();
+    }
+
+    private void setType(String s) {
+
+    }
+}
+
+class Impl extends Abs {
+
+    public Impl() {
     }
 
 }

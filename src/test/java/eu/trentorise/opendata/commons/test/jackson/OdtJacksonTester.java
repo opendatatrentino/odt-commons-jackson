@@ -34,12 +34,12 @@ import static org.junit.Assert.assertEquals;
  * @author David Leoni
  */
 public class OdtJacksonTester {
-    
-     /**
+
+    /**
      * Converts {@code obj} to an {@link ObjectNode}, sets field
      * {@code fieldName} to {@code newNode} and returns the json string
-     * representation of such new object. Also logs the json with the provided logger at FINE
-     * level.
+     * representation of such new object. Also logs the json with the provided
+     * logger at FINE level.
      */
     public static String changeField(ObjectMapper objectMapper, Logger logger, Object obj, String fieldName, JsonNode newNode) {
         checkNotNull(obj);
@@ -64,19 +64,18 @@ public class OdtJacksonTester {
         }
         ObjectNode jo = (ObjectNode) treeNode;
         jo.put(fieldName, newNode);
-        
+
         String json = jo.toString();
-        
+
         logger.log(Level.FINE, "converted json = {0}", json);
-        
+
         return json;
 
     }
 
     /**
      * Tests that the provided object can be converted to json and
-     * reconstructed. Also logs the json with the provided logger at FINE
-     * level.
+     * reconstructed. Also logs the json with the provided logger at FINE level.
      *
      * @return the reconstructed object
      */
@@ -88,15 +87,50 @@ public class OdtJacksonTester {
         T recObj;
 
         String json;
-        
+
         try {
             json = om.writeValueAsString(obj);
             logger.log(Level.FINE, "json = {0}", json);
-        } catch (Exception ex){
-                    throw new RuntimeException("FAILED SERIALIZING!", ex);
+        }
+        catch (Exception ex) {
+            throw new RuntimeException("FAILED SERIALIZING!", ex);
         }
         try {
             Object ret = om.readValue(json, obj.getClass());
+            recObj = (T) ret;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException("FAILED DESERIALIZING!", ex);
+        }
+
+        assertEquals(obj, recObj);
+        return recObj;
+    }
+
+    /**
+     * Tests that the provided object can be converted to json and reconstructed
+     * as type T. Also logs the json with the provided logger at FINE level.
+     *
+     * @return the reconstructed object
+     */
+    public static <T> T testJsonConv(ObjectMapper om, Logger logger, @Nullable Object obj, Class<T> targetClass) {
+
+        checkNotNull(om);
+        checkNotNull(logger);
+
+        T recObj;
+
+        String json;
+
+        try {
+            json = om.writeValueAsString(obj);
+            logger.log(Level.FINE, "json = {0}", json);
+        }
+        catch (Exception ex) {
+            throw new RuntimeException("FAILED SERIALIZING!", ex);
+        }
+        try {
+            Object ret = om.readValue(json, targetClass);
             recObj = (T) ret;
         }
         catch (Exception ex) {
