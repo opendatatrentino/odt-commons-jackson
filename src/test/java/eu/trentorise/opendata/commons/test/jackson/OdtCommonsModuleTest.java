@@ -17,8 +17,11 @@ package eu.trentorise.opendata.commons.test.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import eu.trentorise.opendata.commons.BuilderStyle;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
 import eu.trentorise.opendata.commons.OdtConfig;
@@ -39,8 +42,8 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.immutables.value.Value;
 
 /**
  *
@@ -115,7 +118,6 @@ public class OdtCommonsModuleTest {
     public void testValidationError() throws JsonProcessingException, IOException {
 
         testJsonConv(objectMapper, LOG, Ref.of("", 1, -1, "a"));
-
         testJsonConv(objectMapper, LOG, ValidationError.of(Ref.of("$a.b"), ErrorLevel.INFO, "2", "a%x", "x", "b"));
 
         //String json = changeField(objectMapper, LOG, ValidationError.of("$a.b", 2, "c") , "ref", NullNode.instance);
@@ -124,12 +126,43 @@ public class OdtCommonsModuleTest {
 
     /**
      * Seems it doesn't work with empty constructors
+     * 
+     * @see #testEmptyConstructorForBuilder() 
+     */
+    @Test(expected = com.fasterxml.jackson.databind.JsonMappingException.class)
+    public void testEmptyConstructor() throws IOException {
+        assertEquals(LocalizedString.of(), objectMapper.readValue("{}", LocalizedString.class));
+    }
+
+    @JsonSerialize(as = B.class)
+    @JsonDeserialize(as = B.class)
+    @Value.Immutable
+    @BuilderStyle
+    abstract static class AB {
+
+        @Value.Default
+        public int getProp1() {
+            return 1;
+        }
+        
+        @Value.Default
+        public int getProp2() {
+            return 2;
+        }
+        
+    }
+
+    /**
+     * This works as Jackson by default initializes missing fields with null and
+     * builder has always default values to substitute to nulls
+     * 
+     * @see #testEmptyConstructor() 
      */
     @Test
-    @Ignore
-    public void testEmptyConstructor() throws IOException {
-
-        assertEquals(LocalizedString.of(), objectMapper.readValue("{}", LocalizedString.class));
+    public void testEmptyConstructorForBuilder() throws IOException {
+        B b = objectMapper.readValue("{\"prop1\":3}", B.class);
+        LOG.log(Level.FINE, "b.prop2 = {0}", "'" + b.getProp2() + "'");
+        assertEquals(B.of().withProp1(3), b);
     }
 
     @Test
@@ -161,39 +194,39 @@ public class OdtCommonsModuleTest {
     /**
      * Shows that contrary to Jackson we deserialize "" into {@link Locale#ROOT}
      * instead of nasty null.
-     * 
+     *
      * @since 1.1.0
      */
     @Test
-    public void testEmptyLocaleDeser() throws JsonProcessingException, IOException {           
+    public void testEmptyLocaleDeser() throws JsonProcessingException, IOException {
         RootLocale rootLocale = new RootLocale();
         rootLocale.locale = Locale.ROOT;
         String json = objectMapper.writeValueAsString(rootLocale);
         LOG.log(Level.FINE, "json = {0}", json);
         RootLocale res = objectMapper.readValue(json, RootLocale.class);
         assertNotNull(res.locale);
-        assertEquals(Locale.ROOT, res.locale);        
+        assertEquals(Locale.ROOT, res.locale);
     }
-    
+
     /**
      * Shows that contrary to Jackson we deserialize "" into {@link Locale#ROOT}
      * instead of nasty null.
-     * 
-     * Ignored because super nasty Jackson doesn't even call the {@link eu.trentorise.opendata.commons.jackson.OdtCommonsModule.LocaleDeserializer}
+     *
+     * Expects error because super nasty Jackson doesn't even call the
+     * {@link eu.trentorise.opendata.commons.jackson.OdtCommonsModule.LocaleDeserializer}
      * Sic...
-     * 
+     *
      * @since 1.1.0
      */
-    @Test
-    @Ignore
-    public void testNullLocaleDeser() throws JsonProcessingException, IOException {           
+    @Test(expected = AssertionError.class)
+    public void testNullLocaleDeser() throws JsonProcessingException, IOException {
         RootLocale rootLocale = new RootLocale();
         rootLocale.locale = null;
         String json = objectMapper.writeValueAsString(rootLocale);
         LOG.log(Level.FINE, "json = {0}", json);
-        RootLocale res = objectMapper.readValue(json, RootLocale.class);       
+        RootLocale res = objectMapper.readValue(json, RootLocale.class);
         assertEquals(Locale.ROOT, res.locale);
-    }    
+    }
 
     /**
      * Tests weird module equality copied from Guava module

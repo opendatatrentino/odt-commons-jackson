@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.collect.ImmutableListMultimap;
@@ -41,9 +40,7 @@ import eu.trentorise.opendata.commons.validation.Ref;
 import eu.trentorise.opendata.commons.validation.ValidationError;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
 
 /**
  * A module for handling Odt commons objects with Jackson JSON serialization
@@ -53,8 +50,6 @@ import javax.annotation.Nullable;
  */
 public final class OdtCommonsModule extends SimpleModule {
     private static final Logger LOG = Logger.getLogger(OdtCommonsModule.class.getName());
-
-    
     
     private static final long serialVersionUID = 1L;
 
