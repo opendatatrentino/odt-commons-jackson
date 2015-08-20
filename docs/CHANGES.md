@@ -2,6 +2,14 @@
 ## Release Notes
 
 
+### 1.1.0  todo
+
+todo date
+
+- Now locale "" is deserialized to Locale.ROOT instad of null
+
+
+
 ### 1.0.2
 
 May 5h, 2015

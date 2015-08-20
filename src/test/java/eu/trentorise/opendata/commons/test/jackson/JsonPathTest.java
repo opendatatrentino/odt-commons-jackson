@@ -29,8 +29,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author David Leoni
+ * @since 1.1.0
  */
 public class JsonPathTest {
     private static final Logger LOG = Logger.getLogger(JsonPathTest.class.getName());

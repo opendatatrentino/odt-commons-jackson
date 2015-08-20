@@ -100,22 +100,36 @@ public class JacksonTest {
         assertEquals(Optional.absent(), rb.getOpt());
     }
 
-    private static class NullLocale {
+    private static class RootLocale {
 
         public Locale locale = Locale.ROOT;
     }
 
+    
+     /**
+     * Shows {@link Locale.ROOT} is correctly serializaed to empty string
+     * @see #testLocaleDeser() 
+     * @since 1.1.0 
+     */
+    @Test
+    public void testLocaleSer() throws JsonProcessingException, IOException {
+        ObjectMapper om = new ObjectMapper();
+        RootLocale rootLocale = new RootLocale();        
+        String json = om.writeValueAsString(rootLocale);
+        assertTrue(!json.contains("null"));
+    }
+    
     /**
      * Shows that nasty Jackson deserializes "" into null instead of
      * {@link Locale.ROOT} !!!
      *
      */
     @Test(expected = AssertionError.class)
-    public void localeDeser() throws JsonProcessingException, IOException {
+    public void testLocaleDeser() throws JsonProcessingException, IOException {
         ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(new NullLocale());
+        String json = om.writeValueAsString(new RootLocale());               
         LOG.log(Level.FINE, "json = {0}", json);
-        NullLocale res = om.readValue(json, NullLocale.class);
+        RootLocale res = om.readValue(json, RootLocale.class);
         assertNotNull(res.locale);
         assertEquals(Locale.ROOT, res.locale);
     }
