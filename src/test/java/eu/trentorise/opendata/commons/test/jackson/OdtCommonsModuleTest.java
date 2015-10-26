@@ -25,6 +25,7 @@ import eu.trentorise.opendata.commons.BuilderStyle;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
 import eu.trentorise.opendata.commons.OdtConfig;
+import eu.trentorise.opendata.commons.PeriodOfTime;
 import eu.trentorise.opendata.commons.validation.ValidationError;
 import eu.trentorise.opendata.commons.jackson.OdtCommonsModule;
 import static eu.trentorise.opendata.commons.test.jackson.OdtJacksonTester.changeField;
@@ -114,6 +115,18 @@ public class OdtCommonsModuleTest {
 
     }
 
+    @Test
+    public void testPeriodOfTime () throws JsonProcessingException, IOException {
+
+	testJsonConv(objectMapper, LOG, PeriodOfTime.of("bla"));
+	
+        testJsonConv(objectMapper, LOG, PeriodOfTime.of("1980", "1990"));
+        
+        testJsonConv(objectMapper, LOG, PeriodOfTime.of("1980", "1990", "bla"));
+
+    }
+    
+    
     @Test
     public void testValidationError() throws JsonProcessingException, IOException {
 
