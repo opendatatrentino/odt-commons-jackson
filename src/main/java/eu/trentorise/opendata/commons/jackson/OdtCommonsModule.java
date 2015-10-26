@@ -61,7 +61,7 @@ public final class OdtCommonsModule extends SimpleModule {
 		@JsonProperty("startDate") String startDate,
 		@JsonProperty("endDate") String endDate, 
 		@JsonProperty("rawString") String rawString) {
-
+	    return null;  // just because the method can't be abstract.
 	}
     }
 
