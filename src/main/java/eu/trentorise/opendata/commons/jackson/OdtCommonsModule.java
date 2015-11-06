@@ -47,135 +47,135 @@ import java.util.logging.Logger;
  * @author David Leoni <david.leoni@unitn.it>
  */
 public final class OdtCommonsModule extends SimpleModule {
-    private static final Logger LOG = Logger.getLogger(OdtCommonsModule.class.getName());
+	private static final Logger LOG = Logger.getLogger(OdtCommonsModule.class.getName());
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private static abstract class JacksonPeriodOfTime {
+	/**
+	 * @since 1.1.0
+	 */
+	private abstract static class JacksonPeriodOfTime {
 
-	@JsonCreator
-	public static PeriodOfTime of(
-		@JsonProperty("startDate") String startDate,
-		@JsonProperty("endDate") String endDate, 
-		@JsonProperty("rawString") String rawString) {
-	    return null;  // just because the method can't be abstract.
+		@JsonCreator
+		public static PeriodOfTime of(@JsonProperty("startDate") String startDate,
+				@JsonProperty("endDate") String endDate, @JsonProperty("rawString") String rawString) {
+			return null; // just because the method can't be abstract.
+		}
 	}
-    }
+	private abstract static class JacksonLocalizedString {
 
-    private static abstract class JacksonLocalizedString {
+		@JsonCreator
+		public static LocalizedString of(@JsonProperty("locale") Locale locale, @JsonProperty("string") String string) {
+			return null; // just because the method can't be abstract.
+		}
 
-	@JsonCreator
-	public static LocalizedString of(@JsonProperty("locale") Locale locale, @JsonProperty("string") String string) {
-	    return null; // just because the method can't be abstract.
-	}
-
-    }
-
-  
-
-    private static abstract class JacksonRef {
-
-	@JsonCreator
-	public static Ref of(@JsonProperty("documentId") String documentId,
-		@JsonProperty("physicalRow") int physicalRow, @JsonProperty("physicalColumn") int physicalColumn,
-		@JsonProperty("jsonPath") String jsonPath) {
-	    return null; // just because the method can't be abstract.
 	}
 
-    }
+	/**
+	 * @since 1.1.0
+	 */
+	private abstract static class JacksonRef {
 
-    /**
-     * Creates the module and registers all the needed serializers and
-     * deserializers for Odt Commons objects
-     */
-    public OdtCommonsModule() {
-	super("odt-commons-jackson", readJacksonVersion(OdtCommonsModule.class));
+		@JsonCreator
+		public static Ref of(@JsonProperty("documentId") String documentId,
+				@JsonProperty("physicalRow") int physicalRow, @JsonProperty("physicalColumn") int physicalColumn,
+				@JsonProperty("jsonPath") String jsonPath) {
+			return null; // just because the method can't be abstract.
+		}
 
-	addSerializer(Dict.class, new StdSerializer<Dict>(Dict.class) {
-	    @Override
-	    public void serialize(Dict value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-		jgen.writeObject(value.asMultimap());
-	    }
-	});
-
-	addDeserializer(Dict.class, new StdDeserializer<Dict>(Dict.class) {
-
-	    @Override
-	    public Dict deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-		TypeReference ref = new TypeReference<ImmutableListMultimap<Locale, String>>() {
-		};
-		return Dict.of((ImmutableListMultimap) jp.readValueAs(ref));
-	    }
-	});
-
-	addDeserializer(Locale.class, new LocaleDeserializer());
-
-	setMixInAnnotation(LocalizedString.class, JacksonLocalizedString.class);
-
-	
-	setMixInAnnotation(Ref.class, JacksonRef.class);
-
-    }
-
-    @Override
-    public int hashCode() {
-	return getClass().hashCode(); // it's like this in Guava module!
-    }
-
-    @Override
-    public boolean equals(Object o) {
-	return this == o; // it's like this in Guava module!
-    }
-
-    /**
-     * Returns the jackson version for an odt module by reading it from build
-     * info at the root of provided class resources.
-     */
-    public static Version readJacksonVersion(Class clazz) {
-	SemVersion semver = SemVersion.of(OdtConfig.of(clazz).getBuildInfo().getVersion());
-	return new Version(semver.getMajor(), semver.getMinor(), semver.getPatch(), semver.getPreReleaseVersion(),
-		"eu.trentorise.opendata.commons.jackson", "odt-commons-jackson");
-    }
-
-    /**
-     * Registers in the provided object mapper the jackson odt commons module
-     * and also the required guava module.
-     */
-    public static void registerModulesInto(ObjectMapper om) {
-	om.registerModule(new GuavaModule());
-	om.registerModule(new OdtCommonsModule());
-    }
-
-    /**
-     * Needed as nasty Jackson deserializes Locale.ROOT to null!
-     * 
-     * @since 1.1.0
-     */
-    public static class LocaleDeserializer extends StdDeserializer<Locale> {
-
-	public LocaleDeserializer() {
-	    super(Locale.class);
 	}
 
-	public LocaleDeserializer(Class<Locale> vc) {
-	    super(vc);
+	/**
+	 * Creates the module and registers all the needed serializers and
+	 * deserializers for Odt Commons objects
+	 */
+	public OdtCommonsModule() {
+		super("odt-commons-jackson", readJacksonVersion(OdtCommonsModule.class));
+
+		addSerializer(Dict.class, new StdSerializer<Dict>(Dict.class) {
+			@Override
+			public void serialize(Dict value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+				jgen.writeObject(value.asMultimap());
+			}
+		});
+
+		addDeserializer(Dict.class, new StdDeserializer<Dict>(Dict.class) {
+
+			@Override
+			public Dict deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+				TypeReference ref = new TypeReference<ImmutableListMultimap<Locale, String>>() {
+				};
+				return Dict.of((ImmutableListMultimap) jp.readValueAs(ref));
+			}
+		});
+
+		addDeserializer(Locale.class, new LocaleDeserializer());
+
+		setMixInAnnotation(LocalizedString.class, JacksonLocalizedString.class);
+
+		setMixInAnnotation(Ref.class, JacksonRef.class);
+
 	}
 
 	@Override
-	public Locale deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-	    JsonToken t = jp.getCurrentToken();
-
-	    if (t == JsonToken.VALUE_NULL) {
-		return Locale.ROOT;
-	    }
-
-	    if (t == JsonToken.VALUE_STRING) {
-		String text = jp.getText();
-		return Locale.forLanguageTag(text);
-	    }
-
-	    throw new IOException("Error while parsing Locale! Unrecognized JSON token: " + t.toString());
+	public int hashCode() {
+		return getClass().hashCode(); // it's like this in Guava module!
 	}
 
-    }
+	@Override
+	public boolean equals(Object o) {
+		return this == o; // it's like this in Guava module!
+	}
+
+	/**
+	 * Returns the jackson version for an odt module by reading it from build
+	 * info at the root of provided class resources.
+	 */
+	public static Version readJacksonVersion(Class clazz) {
+		SemVersion semver = SemVersion.of(OdtConfig.of(clazz).getBuildInfo().getVersion());
+		return new Version(semver.getMajor(), semver.getMinor(), semver.getPatch(), semver.getPreReleaseVersion(),
+				"eu.trentorise.opendata.commons.jackson", "odt-commons-jackson");
+	}
+
+	/**
+	 * Registers in the provided object mapper the jackson odt commons module
+	 * and also the required guava module.
+	 */
+	public static void registerModulesInto(ObjectMapper om) {
+		om.registerModule(new GuavaModule());
+		om.registerModule(new OdtCommonsModule());
+	}
+
+	/**
+	 * Needed as nasty Jackson deserializes Locale.ROOT to null!
+	 * 
+	 * @since 1.1.0
+	 */
+	public static class LocaleDeserializer extends StdDeserializer<Locale> {
+
+		public LocaleDeserializer() {
+			super(Locale.class);
+		}
+
+		public LocaleDeserializer(Class<Locale> vc) {
+			super(vc);
+		}
+
+		@Override
+		public Locale deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+			JsonToken t = jp.getCurrentToken();
+
+			if (t == JsonToken.VALUE_NULL) {
+				return Locale.ROOT;
+			}
+
+			if (t == JsonToken.VALUE_STRING) {
+				String text = jp.getText();
+				return Locale.forLanguageTag(text);
+			}
+
+			throw new IOException("Error while parsing Locale! Unrecognized JSON token: " + t.toString());
+		}
+
+	}
 }
