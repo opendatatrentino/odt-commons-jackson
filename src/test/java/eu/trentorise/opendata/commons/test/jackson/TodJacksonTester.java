@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import static com.google.common.base.Preconditions.checkNotNull;
-import eu.trentorise.opendata.commons.OdtException;
+import eu.trentorise.opendata.commons.TodException;
 import static eu.trentorise.opendata.commons.validation.Preconditions.checkNotEmpty;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
  * Utility class to test Jackson serialization/deserializtion
  * @author David Leoni
  */
-public class OdtJacksonTester {
+public class TodJacksonTester {
 
     /**
      * Converts {@code obj} to an {@link ObjectNode}, sets field
@@ -60,7 +60,7 @@ public class OdtJacksonTester {
             throw new RuntimeException("Error while creating json tree from serialized object:" + string, ex);
         }
         if (!treeNode.isObject()) {
-            throw new OdtException("The provided object was jacksonized to a string which does not represent a JSON object! String is " + string);
+            throw new TodException("The provided object was jacksonized to a string which does not represent a JSON object! String is " + string);
         }
         ObjectNode jo = (ObjectNode) treeNode;
         jo.put(fieldName, newNode);

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.base.Optional;
-import eu.trentorise.opendata.commons.OdtConfig;
+import eu.trentorise.opendata.commons.TodConfig;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
@@ -48,7 +48,7 @@ public class JacksonTest {
 
     @BeforeClass
     public static void beforeClass() {
-        OdtConfig.init(JacksonTest.class);
+        TodConfig.init(JacksonTest.class);
     }
 
     static class A {

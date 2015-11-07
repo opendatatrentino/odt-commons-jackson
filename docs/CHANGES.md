@@ -4,8 +4,10 @@
 
 ### 1.1.0 
 
-November 6th, 2015
+November 7th, 2015
 
+- renamed from odt-commons-jackson to tod-commons-jackson
+- changed groupid from eu.trentorise.opendata.commons to eu.trentorise.opendata
 - Now locale "" is deserialized to Locale.ROOT instad of null
 - added serialization for Ref, PeriodOfTime
 

@@ -1,13 +1,13 @@
 <p class="jedoc-to-strip">
 WARNING: THIS IS ONLY A TEMPLATE FOR THE DOCUMENTATION. <br/>
-RELEASE DOCS ARE ON THE <a href="http://opendatatrentino.github.io/odt-commons-jackson/" target="_blank">PROJECT WEBSITE</a>
+RELEASE DOCS ARE ON THE <a href="http://opendatatrentino.github.io/tod-commons-jackson/" target="_blank">PROJECT WEBSITE</a>
 </p>
 
 **About**
 
-Java library for [Odt commons](https://github.com/opendatatrentino/odt-commons) JSON serialization with Jackson.
+Java library for [Tod commons](https://github.com/opendatatrentino/tod-commons) JSON serialization with Jackson.
 
-  * Jackson module for odt-commons datatypes
+  * Jackson module for tod-commons datatypes
   * has some utility for working with Jackson
   * dependency handling with Maven
   * has a liberal Apache 2.0 license

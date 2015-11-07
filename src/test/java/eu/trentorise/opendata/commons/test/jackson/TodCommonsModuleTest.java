@@ -24,11 +24,11 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import eu.trentorise.opendata.commons.BuilderStyle;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
-import eu.trentorise.opendata.commons.OdtConfig;
+import eu.trentorise.opendata.commons.TodConfig;
 import eu.trentorise.opendata.commons.PeriodOfTime;
-import eu.trentorise.opendata.commons.jackson.OdtCommonsModule;
-import static eu.trentorise.opendata.commons.test.jackson.OdtJacksonTester.changeField;
-import static eu.trentorise.opendata.commons.test.jackson.OdtJacksonTester.testJsonConv;
+import eu.trentorise.opendata.commons.jackson.TodCommonsModule;
+import static eu.trentorise.opendata.commons.test.jackson.TodJacksonTester.changeField;
+import static eu.trentorise.opendata.commons.test.jackson.TodJacksonTester.testJsonConv;
 import eu.trentorise.opendata.commons.validation.Ref;
 import java.io.IOException;
 import java.util.Locale;
@@ -49,21 +49,21 @@ import org.immutables.value.Value;
  *
  * @author David Leoni
  */
-public class OdtCommonsModuleTest {
+public class TodCommonsModuleTest {
 
-    private static final Logger LOG = Logger.getLogger(OdtCommonsModuleTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(TodCommonsModuleTest.class.getName());
 
     private ObjectMapper objectMapper;
 
     @BeforeClass
     public static void beforeClass() {
-        OdtConfig.init(OdtCommonsModuleTest.class);
+        TodConfig.init(TodCommonsModuleTest.class);
     }
 
     @Before
     public void before() {
         objectMapper = new ObjectMapper();
-        OdtCommonsModule.registerModulesInto(objectMapper);
+        TodCommonsModule.registerModulesInto(objectMapper);
     }
 
     @After
@@ -193,7 +193,7 @@ public class OdtCommonsModuleTest {
 
         ObjectMapper om = new ObjectMapper();
         om.registerModule(new GuavaModule());
-        om.registerModule(new OdtCommonsModule());
+        om.registerModule(new TodCommonsModule());
 
         String json = om.writeValueAsString(LocalizedString.of(Locale.ITALIAN, "ciao"));
         LocalizedString reconstructedLocalizedString = om.readValue(json, LocalizedString.class);
@@ -203,7 +203,7 @@ public class OdtCommonsModuleTest {
     public void example2() throws JsonProcessingException, IOException {
 
         ObjectMapper om = new ObjectMapper();
-        OdtCommonsModule.registerModulesInto(om);
+        TodCommonsModule.registerModulesInto(om);
 
         String json = om.writeValueAsString(LocalizedString.of(Locale.ITALIAN, "ciao"));
         LocalizedString reconstructedLocalizedString = om.readValue(json, LocalizedString.class);
@@ -236,7 +236,7 @@ public class OdtCommonsModuleTest {
      * instead of nasty null.
      *
      * Expects error because super nasty Jackson doesn't even call the
-     * {@link eu.trentorise.opendata.commons.jackson.OdtCommonsModule.LocaleDeserializer}
+     * {@link eu.trentorise.opendata.commons.jackson.TodCommonsModule.LocaleDeserializer}
      * Sic...
      *
      * @since 1.1.0
@@ -256,10 +256,10 @@ public class OdtCommonsModuleTest {
      */
     @Test
     public void testEquality() {
-        OdtCommonsModule sm = new OdtCommonsModule();
+        TodCommonsModule sm = new TodCommonsModule();
         assertEquals(sm, sm);
-        assertEquals(new OdtCommonsModule().hashCode(), new OdtCommonsModule().hashCode());
-        assertNotEquals(new OdtCommonsModule(), new OdtCommonsModule());
+        assertEquals(new TodCommonsModule().hashCode(), new TodCommonsModule().hashCode());
+        assertNotEquals(new TodCommonsModule(), new TodCommonsModule());
     }
 
 }

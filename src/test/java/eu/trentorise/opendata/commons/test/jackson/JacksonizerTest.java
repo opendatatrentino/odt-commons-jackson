@@ -17,9 +17,9 @@ package eu.trentorise.opendata.commons.test.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.trentorise.opendata.commons.LocalizedString;
-import eu.trentorise.opendata.commons.OdtConfig;
+import eu.trentorise.opendata.commons.TodConfig;
 import eu.trentorise.opendata.commons.jackson.Jacksonizer;
-import eu.trentorise.opendata.commons.jackson.OdtCommonsModule;
+import eu.trentorise.opendata.commons.jackson.TodCommonsModule;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -39,7 +39,7 @@ public class JacksonizerTest {
 
     @BeforeClass
     public static void beforeClass() {
-        OdtConfig.init(JacksonizerTest.class);
+        TodConfig.init(JacksonizerTest.class);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class JacksonizerTest {
     @Test
     public void testToFromJson() {
         ObjectMapper objectMapper = new ObjectMapper();
-        OdtCommonsModule.registerModulesInto(objectMapper);
+        TodCommonsModule.registerModulesInto(objectMapper);
         LocalizedString ls = LocalizedString.of(Locale.ITALIAN, "ciao");
         assertEquals(ls, Jacksonizer.of().fromJson(Jacksonizer.of(objectMapper).toJson(ls), LocalizedString.class));
 

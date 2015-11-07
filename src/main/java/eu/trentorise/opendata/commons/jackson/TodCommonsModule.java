@@ -32,7 +32,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.collect.ImmutableListMultimap;
 import eu.trentorise.opendata.commons.Dict;
 import eu.trentorise.opendata.commons.LocalizedString;
-import eu.trentorise.opendata.commons.OdtConfig;
+import eu.trentorise.opendata.commons.TodConfig;
 import eu.trentorise.opendata.commons.PeriodOfTime;
 import eu.trentorise.opendata.commons.SemVersion;
 import eu.trentorise.opendata.commons.validation.Ref;
@@ -41,13 +41,13 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 /**
- * A module for handling Odt commons objects with Jackson JSON serialization
+ * A module for handling Tod commons objects with Jackson JSON serialization
  * framework.
  *
  * @author David Leoni <david.leoni@unitn.it>
  */
-public final class OdtCommonsModule extends SimpleModule {
-	private static final Logger LOG = Logger.getLogger(OdtCommonsModule.class.getName());
+public final class TodCommonsModule extends SimpleModule {
+	private static final Logger LOG = Logger.getLogger(TodCommonsModule.class.getName());
 
 	private static final long serialVersionUID = 1L;
 
@@ -87,10 +87,10 @@ public final class OdtCommonsModule extends SimpleModule {
 
 	/**
 	 * Creates the module and registers all the needed serializers and
-	 * deserializers for Odt Commons objects
+	 * deserializers for Tod Commons objects
 	 */
-	public OdtCommonsModule() {
-		super("odt-commons-jackson", readJacksonVersion(OdtCommonsModule.class));
+	public TodCommonsModule() {
+		super("tod-commons-jackson", readJacksonVersion(TodCommonsModule.class));
 
 		addSerializer(Dict.class, new StdSerializer<Dict>(Dict.class) {
 			@Override
@@ -128,22 +128,22 @@ public final class OdtCommonsModule extends SimpleModule {
 	}
 
 	/**
-	 * Returns the jackson version for an odt module by reading it from build
+	 * Returns the jackson version for an tod module by reading it from build
 	 * info at the root of provided class resources.
 	 */
 	public static Version readJacksonVersion(Class clazz) {
-		SemVersion semver = SemVersion.of(OdtConfig.of(clazz).getBuildInfo().getVersion());
+		SemVersion semver = SemVersion.of(TodConfig.of(clazz).getBuildInfo().getVersion());
 		return new Version(semver.getMajor(), semver.getMinor(), semver.getPatch(), semver.getPreReleaseVersion(),
-				"eu.trentorise.opendata.commons.jackson", "odt-commons-jackson");
+				"eu.trentorise.opendata.commons.jackson", "tod-commons-jackson");
 	}
 
 	/**
-	 * Registers in the provided object mapper the jackson odt commons module
+	 * Registers in the provided object mapper the jackson tod commons module
 	 * and also the required guava module.
 	 */
 	public static void registerModulesInto(ObjectMapper om) {
 		om.registerModule(new GuavaModule());
-		om.registerModule(new OdtCommonsModule());
+		om.registerModule(new TodCommonsModule());
 	}
 
 	/**

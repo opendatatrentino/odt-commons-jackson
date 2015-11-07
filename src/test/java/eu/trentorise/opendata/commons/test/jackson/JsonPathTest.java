@@ -20,7 +20,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.Path;
 import com.jayway.jsonpath.internal.PathCompiler;
 import com.jayway.jsonpath.internal.token.PathToken;
-import eu.trentorise.opendata.commons.OdtConfig;
+import eu.trentorise.opendata.commons.TodConfig;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +38,7 @@ public class JsonPathTest {
         
         @BeforeClass
     public static void beforeClass() {
-        OdtConfig.init(JsonPathTest.class);
+        TodConfig.init(JsonPathTest.class);
     }
     
     @Test

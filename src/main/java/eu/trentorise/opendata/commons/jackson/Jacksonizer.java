@@ -44,7 +44,7 @@ public final class Jacksonizer {
     private Jacksonizer() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new GuavaModule());
-        objectMapper.registerModule(new OdtCommonsModule());
+        objectMapper.registerModule(new TodCommonsModule());
     }
 
     private Jacksonizer(ObjectMapper objectMapper) {
@@ -95,7 +95,7 @@ public final class Jacksonizer {
     }
 
     /**
-     * Factory method, returning the Jacksonizer already configured for Odt
+     * Factory method, returning the Jacksonizer already configured for Tod
      * commons objects.
      */
     public static Jacksonizer of() {
