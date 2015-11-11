@@ -11,6 +11,10 @@
 /conf/*
 !/conf/README.md
 
+/release.properties
+/pom.xml.releaseBackup
+
+
 ##### INTELLIJ
 .idea/workspace.xml
 .idea/tasks.xml
