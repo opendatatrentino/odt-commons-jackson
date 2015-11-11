@@ -124,7 +124,8 @@
         
             <plugin>
                 <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>                
+                <artifactId>site-maven-plugin</artifactId>    
+                <version>0.12</version>            
             </plugin>         
         </plugins>      
               

@@ -4,7 +4,7 @@
 
 ### 1.1.0 
 
-November 9th, 2015
+November 11th, 2015
 
 - renamed from odt-commons-jackson to tod-commons-jackson
 - changed groupid from eu.trentorise.opendata.commons to eu.trentorise.opendata
