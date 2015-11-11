@@ -9,7 +9,7 @@
 
 
 /conf/*
-!/conf/README.md
+!/conf/README.txt
 
 /release.properties
 /pom.xml.releaseBackup
