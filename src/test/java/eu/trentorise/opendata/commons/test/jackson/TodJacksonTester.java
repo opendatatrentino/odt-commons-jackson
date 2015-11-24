@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import exceptions.TodException;
+import eu.trentorise.opendata.commons.exceptions.TodException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static eu.trentorise.opendata.commons.validation.Preconditions.checkNotEmpty;
