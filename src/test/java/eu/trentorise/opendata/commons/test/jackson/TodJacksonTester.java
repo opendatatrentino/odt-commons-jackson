@@ -20,8 +20,10 @@ import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import exceptions.TodException;
+
 import static com.google.common.base.Preconditions.checkNotNull;
-import eu.trentorise.opendata.commons.TodException;
 import static eu.trentorise.opendata.commons.validation.Preconditions.checkNotEmpty;
 import java.io.IOException;
 import java.util.logging.Level;
