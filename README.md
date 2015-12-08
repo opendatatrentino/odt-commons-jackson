@@ -11,7 +11,7 @@ Java library for [Tod commons](https://github.com/opendatatrentino/tod-commons) 
   * has some utility for working with Jackson
   * dependency handling with Maven
   * has a liberal Apache 2.0 license
-  * supports Java 6+
+  * supports Java 7+
 
 Usage: See [docs](docs)
 
